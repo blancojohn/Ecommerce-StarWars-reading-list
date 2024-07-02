@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, Favorite_Planet, Favorite_People, People, Planet, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
 
 api = Blueprint('api', __name__)
 
@@ -21,7 +22,7 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-@api.route('/people', methods=['GET']) #Lista todos los personajes.
+@api.route('/characters', methods=['GET']) #Lista todos los personajes.
 def get_characters():
     characters= People.query.all()
     characters= list(map(lambda people: people.to_dict(), characters))
@@ -64,7 +65,7 @@ def add_favorite_people(people_id):
     #A continuación preparación del Insert
     user_id= 1
     favorites_people= Favorite_People()  
-    favorites_people.people_id= people_id
+    favorites_people.characters_id= people_id
     favorites_people.users_id= user_id
 
     #Agrega el personaje favorito agregado por el usuario.
@@ -94,7 +95,7 @@ def get_planets():
     planets= list(map(lambda planet: planet.to_dict(), planets))
     return jsonify(planets), 200
 
-@api.route('/planets/<int:planet_id>', methods=['GET']) #Muestra un solo planeta.
+@api.route('/planet/<int:planet_id>', methods=['GET']) #Muestra un solo planeta.
 def get_planet(planet_id):
     planet= Planet.query.filter_by(id= planet_id).first()
     result= planet.to_dict()
@@ -151,9 +152,41 @@ def delete_favorite_planet(planet_id):
 
     return jsonify({"messagge": "Planet was deleted!"}), 200
 
-
-
 #OPERACIONES DE USUARIO
+# Crea usuarios.
+@api.route('/register', methods=['POST'])
+def register_user():
+
+    print(request.get_json())# Comprueba que estoy accediendo a los campos.
+    username= request.json.get('username')
+    email= request.json.get('email')
+    password= request.json.get('password')
+
+    #Validadciones:
+    if not username:
+        return jsonify({"messagge": "Username es requerido."})
+
+    if not email:
+        return jsonify({"messagge": "Email es requerido."}), 400
+    
+    if not password:
+        return jsonify({"messagge": "Password es requerido."}), 400
+    
+    found= User.query.filter_by(email= email).first()
+    if found:
+        return jsonify({"messagge": "Email existe."}), 400
+    
+    #Preparación del insert:
+    user= User()
+    user.username= username
+    user.email= email
+    user.password= generate_password_hash(password)#Encripta el el password que pase el usuaeio.
+
+    #Agrega los datos y se guardan:
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({"success": "Registro satisfactorio. Por favor hacer click en inicia sesión"}), 200
 
 @api.route('/users', methods=['GET'])
 def get_users():
@@ -169,7 +202,7 @@ def get_favorites_users(username):
 
 @api.route('/user/favorites', methods=['GET'])#Lista todos los favoritos que pertenecen al usuario actual.
 def user_favorites():
-    user_id= 1
+    user_id= 1 #Momentaneamente Hard-code, recoradar debe ser dinámico
     favorites_characters= Favorite_People.query.filter_by(people_id= user_id)#Filtra por el campo people_id de la clase.
     favorites_planets= Favorite_Planet.query.filter_by(planets_id= user_id)#Filtra por el campo planets_id de la clase.
 
