@@ -223,6 +223,14 @@ def login_user():
 
     return jsonify(datos), 200
 
+#Ruta privada que solicita el token
+@api.route('private')
+@jwt_required()
+def private():
+    id= get_jwt_identity() #Accede a la info que se guarda en el token.
+    user= User.query.get(id) #Almacena la búsqueda del usuario por el id.
+    return jsonify(user.to_dict()), 200
+
 @api.route('/users', methods=['GET'])
 def get_users():
     users= User.query.all() #Consulta a todos los usuarios del blog en la base de datos.

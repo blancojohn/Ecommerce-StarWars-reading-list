@@ -15,6 +15,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				password: ""
 			},
 
+			/* Las siguientes propiedades guardan los datos de usuario luego de iniciar sesión
+			   porque después son untilizados en el sessionStorage */
+			   user: null,
+			   accessToken: null, /* Propiedad que recibe el valor de access_token desde la API cuando crea el token */
+
 			urlApi: "http://127.0.0.1:3001",
 
 			message: null,
@@ -32,6 +37,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
+
+			routePrivateUser: () => {
+
+				const { urlApi, accessToken } = getStore()
+				const { getFetch }= getActions()
+				const url = `${urlApi}/api/private`
+				const solicitud = {
+					method: 'GET', /* Se debe especificar el  tipo de solicitud y agregar headers para poder pasar el token generado en el  login */
+					headers: {
+						"Content-type": "application/json",
+						"Authorization": `Bearer ${accessToken}` 
+					}
+				}
+				
+				request.then((response)=> response.json()).then(datos => {
+					if (datos.msg) {
+						toast.error(datos.msg)
+					} else {
+						setStore({
+							user: datos
+						})
+						}
+					})
+			},
 
 			handleSubmitLogin: (e) => {
 				e.preventDefault()
@@ -80,7 +109,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				const { loginUser } = getStore()
 				const { name, value } = e.target
-				
+
 				loginUser[name] = value
 				setStore({
 					loginUser: loginUser
