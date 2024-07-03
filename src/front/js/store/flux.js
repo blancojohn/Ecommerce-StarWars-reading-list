@@ -10,6 +10,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				password: ""
 			},
 
+			loginUser: {
+				email: "",
+				password: ""
+			},
+
 			urlApi: "http://127.0.0.1:3001",
 
 			message: null,
@@ -27,9 +32,64 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
+
+			handleSubmitLogin: (e) => {
+				e.preventDefault()
+
+				const { loginUser, urlApi } = getStore()
+				const { getFetch } = getActions()
+
+				/* URL a acceder */
+				const url = `${urlApi}/api/login`
+				/* Transforma los datos en string */
+				const raw = JSON.stringify(loginUser)
+				/* Crea las opciones de la petición */
+				const solicitud = {
+					method: 'POST',
+					body: raw,
+					headers: {
+						"Content-Type": "application/json"
+					}
+				}
+
+				const request = getFetch(url, solicitud)
+				request.then((response) => response.json()).then((datos) => {
+					if (datos.messagge) {
+						toast.error(datos.messagge)
+					} else {
+						toast.success(datos.success)
+						setStore({
+							loginUser: {
+								email: "",
+								password: "",
+							},
+
+							/* Se setean las siguientes propiedades del store con los datos de usuario 
+								cuando hace login para después usarlas en el sessionStorage */
+							user: datos.user,
+							accessToken: datos.access_token
+						})
+					}
+					/* A continuación acceso al sessionStorage para mantener los datos de usuario mientras navega con su usuario */
+					sessionStorage.setItem('access_token', datos.access_token)
+					sessionStorage.setItem('user', JSON.stringify(datos.user))/* user es un diccionario en la tabla por lo tanto debe ser covertido en string*/
+				}).catch(error => console.log(error))
+			},
+
+			handleChangeLogin: (e) => {
+
+				const { loginUser } = getStore()
+				const { name, value } = e.target
+				
+				loginUser[name] = value
+				setStore({
+					loginUser: loginUser
+				})
+			},
+
 			handleSubmitRegister: (e) => {
 				e.preventDefault()
-				
+
 				const { registerUser, urlApi } = getStore()
 				const { getFetch } = getActions()
 

@@ -13,14 +13,15 @@ export const RegisterOrLogin = () => {
     return (
         <Container className="mt-5">
             <Row className="justify-content-center">
+                <p className="d-flex justify-content-center">Por favor regístrate o inicia sesión.</p>
                 <Col md={8} lg={6}>
                     {/* estos son los botones que desencadenan la animacion y el cambio de formulario */}
                     <div className="text-center mb-4">
                         <Button variant="primary" className="me-2" onClick={() => setIsRegister(true)}>
-                            Regístrate
+                            Register Form
                         </Button>
-                        <Button variant="secondary" onClick={() => setIsRegister(false)}>
-                            Inicia Sesión
+                        <Button variant="primary" onClick={() => setIsRegister(false)}>
+                            Login form
                         </Button>
                     </div>
                     {/* SwitchTransition y CSSTransition de react-transition-group se usan aqui porfa acordarse de usar NPM install para que todas las dependencias funcionen */}
@@ -36,14 +37,14 @@ export const RegisterOrLogin = () => {
                                         // aquii se muestra el formulario de registro o login según el estado isRegister usando ternario
                                         <>
                                             <div className="text-center mb-3">
-                                                <h3>Please register!</h3>
+                                                <h3>Please register !</h3>
                                             </div>
                                             <Register />
                                         </>
                                     ) : (
                                         <>
                                             <div className="text-center mb-3">
-                                                <h3>Please login!</h3>
+                                                <h3>Please login !</h3>
                                             </div>
                                             <Login />
                                         </>
