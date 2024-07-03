@@ -17,49 +17,46 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			/* Las siguientes propiedades guardan los datos de usuario luego de iniciar sesión
 			   porque después son untilizados en el sessionStorage */
-			   user: null,
-			   accessToken: null, /* Propiedad que recibe el valor de access_token desde la API cuando crea el token */
+			user: null,
+			accessToken: null, /* Propiedad que recibe el valor de access_token desde la API cuando crea el token */
 
 			urlApi: "http://127.0.0.1:3001",
 
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
 		},
 		actions: {
+
+			/* Mantiene abierta la sesión del usuario por los valores asignados
+			   a las propiedades del store de sessionStorage. Se ejecuta dentro appContext */
+			checkCurrentUser: () => {
+				setStore({
+					accessToken: sessionStorage.getItem('access_token'),
+					user: JSON.parse(sessionStorage.getItem('user'))/* Convierte de nuevo los datos en formato json */
+				})
+			},
 
 			routePrivateUser: () => {
 
 				const { urlApi, accessToken } = getStore()
-				const { getFetch }= getActions()
+				const { getFetch } = getActions()
 				const url = `${urlApi}/api/private`
 				const solicitud = {
 					method: 'GET', /* Se debe especificar el  tipo de solicitud y agregar headers para poder pasar el token generado en el  login */
 					headers: {
 						"Content-type": "application/json",
-						"Authorization": `Bearer ${accessToken}` 
+						"Authorization": `Bearer ${accessToken}`
 					}
 				}
-				
-				request.then((response)=> response.json()).then(datos => {
+
+				const request = getFetch(url, solicitud)
+				request.then((response) => response.json()).then(datos => {
 					if (datos.msg) {
 						toast.error(datos.msg)
 					} else {
 						setStore({
 							user: datos
 						})
-						}
-					})
+					}
+				})
 			},
 
 			handleSubmitLogin: (e) => {
@@ -165,43 +162,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 			},
 
+			logOut: () => {
+				setStore({
+					user: null,
+					accessToken: null,
+				})
+
+				sessionStorage.removeItem('user')
+				sessionStorage.removeItem('access_token')
+			},
+
 			getFetch: (url, solicitud) => {
 				return fetch(url, solicitud)
 			},
-
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-
-			getMessage: async () => {
-				try {
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
-					return data;
-				} catch (error) {
-					console.log("Error loading message from backend", error)
-				}
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
-			}
 		}
 	};
 };
 
 export default getState;
+

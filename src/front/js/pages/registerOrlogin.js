@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { Context } from "../store/appContext";
 import { Card, Row, Col, Button, Container } from "react-bootstrap";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import Register from "../component/Register.jsx";
@@ -6,9 +8,12 @@ import Login from "../component/Login.jsx";
 import "../../styles/registerOrlogin.css" 
 
 
-export const RegisterOrLogin = () => {
+const RegisterOrLogin = () => {
     // Guarda los formularios a mostrar en la misma página según acción del usuario
     const [isRegister, setIsRegister] = useState(true);
+
+    const { store, actions } = useContext(Context)
+    if (!!store.user) return <Navigate to="/private" replace />
 
     return (
         <Container className="mt-5">
