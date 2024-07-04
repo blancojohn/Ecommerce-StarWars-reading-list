@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Context } from '../store/appContext'
-/* import { Link } from "react-router-dom";
-import HeartIcon from "./HeartIcon"; */
+import { Link } from "react-router-dom";
+/* import HeartIcon from "./HeartIcon"; */ 
 
 
 const CardPlanet = () => {
@@ -22,10 +22,10 @@ const CardPlanet = () => {
                                             <h6 className="card-title">{planet.name}</h6>
                                         </div>
                                         <div className="card-body">
-                                           {/*  <Link to={`/planets/${planet.id}`} type="button" className="btn btn-primary">Learn More</Link>
-                                            <button onClick={() => actions.addFavorites(index, "planets")} className={`likeBtn ${planet.liked ? "liked" : ""}`}>
+                                            <Link to={`/planets/${planet.id}`} type="button" className="btn btn-primary">Learn More</Link>
+                                            {/* <button onClick={() => actions.addFavorites(index, "planets")} className={`likeBtn ${planet.liked ? "liked" : ""}`}>
                                                 <HeartIcon />
-                                            </button> */}
+                                            </button> */} 
                                         </div>
                                     </div>
                                 </div>

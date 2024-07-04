@@ -4,6 +4,8 @@ import { ToastContainer } from 'react-toastify';
 import ScrollToTop from "./component/scrollToTop";
 
 import { Home } from "./pages/home";
+import DetailsPeople from './pages/detailsPeople';
+import DetailsPlanet from './pages/detailsPlanet';
 import RegisterOrLogin from "./pages/registerOrlogin";
 import { Me } from "./pages/private";
 import injectContext from "./store/appContext";
@@ -28,6 +30,8 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<RegisterOrLogin />} path="/registerorlogin" />
                         <Route element={<Me />} path="private" />
+                        <Route path='/characters/:id' element={<DetailsPeople />} />
+                        <Route path='/planets/:id' element={<DetailsPlanet />} />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <ToastContainer />

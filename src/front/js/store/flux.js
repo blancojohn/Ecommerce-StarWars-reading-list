@@ -19,6 +19,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 			characters: [],
 			planets: [],
 
+			//Descripción de una entidad para las vistas DetailsPeople o DetailsPlanet
+			detailsPeople: {},
+			detailsPlanet: {}, 
+
 			/* Las siguientes propiedades guardan los datos de usuario luego de iniciar sesión
 			   porque después son untilizados en el sessionStorage */
 			user: null,
@@ -28,6 +32,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 		},
 		actions: {
+
+			getDetailsPeople: (id) => {
+                const { urlApi } = getStore()
+                fetch(`${urlApi}/people/${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        setStore({ detailsPeople: data })
+                    })
+                    .catch(err => console.error(err))
+            },
+
+			getDetailsPlanet: (id) => {
+                const { urlApi } = getStore()
+                fetch(`${urlApi}/planet/${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        setStore({ detailsPlanet: data })
+                    })
+                    .catch(err => console.error(err))
+            },
 
 			getEntitys: () => {
                 const { urlApi } = getStore()
