@@ -15,15 +15,52 @@ const getState = ({ getStore, getActions, setStore }) => {
 				password: ""
 			},
 
+			//Entidades
+			characters: [],
+			planets: [],
+
 			/* Las siguientes propiedades guardan los datos de usuario luego de iniciar sesión
 			   porque después son untilizados en el sessionStorage */
 			user: null,
 			accessToken: null, /* Propiedad que recibe el valor de access_token desde la API cuando crea el token */
 
-			urlApi: "http://127.0.0.1:3001",
+			urlApi: "http://127.0.0.1:3001/api",
 
 		},
 		actions: {
+
+			getEntitys: () => {
+                const { urlApi } = getStore()
+                fetch(`${urlApi}/characters`)
+                    .then(res => res.json())
+                    .then(data => {
+                        let result = data.map((entity) => {
+                            return {
+                                ...entity,
+                                liked: false
+                            }
+                        })
+                        setStore({
+							characters: result
+						})
+                    })
+
+                    .catch(err => console.error(err))
+                fetch(`${urlApi}/planets`)
+                    .then(res => res.json())
+                    .then(data => {
+                        let result= data.map((entity) => {
+                            return {
+                                ...entity,
+                                liked: false
+                            }
+                        })
+                        setStore({ 
+							planets: result
+					})
+                    })
+                    .catch(err => console.error(err))
+            },
 
 			/* Mantiene abierta la sesión del usuario por los valores asignados
 			   a las propiedades del store de sessionStorage. Se ejecuta dentro appContext */

@@ -29,6 +29,7 @@ const injectContext = PassedComponent => {
 			 * store, instead use actions, like this:
 			 **/
 			state.actions.checkCurrentUser(); // <---- Es llamada cada vaez que carga el componente.
+			state.actions.getEntitys()
 		}, []);
 
 		// The initial value for the context is not null anymore, but the current state of this component,

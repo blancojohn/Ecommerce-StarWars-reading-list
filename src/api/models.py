@@ -40,7 +40,7 @@ class Planet(db.Model): #Contiene los planetas de StarWars.
     def to_dict(self):
         return{
             "id": self.id,
-            "name": self.id,
+            "name": self.name,
             "description": self.description,
             "favorites_users": list(map(lambda user: user.id, self.favorites_users))#crea lista con los id de los usuarios que agregaron planetas favoritos.
         }
