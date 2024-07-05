@@ -12,7 +12,7 @@ export const Navbar = () => {
 			<div className="container">
 				{
 					(store.accessToken) ? (
-						<>
+						<>	
 							<div className="ms-auto">
 								<Link to="/private">
 									Mi perfil

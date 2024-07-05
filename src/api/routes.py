@@ -65,10 +65,8 @@ def add_favorite_people(people_id):
     print(datos['users_id'])
 
     #A continuación preparación del Insert
-    user_id= 1
     favorites_people= Favorite_People()  
     favorites_people.characters_id= people_id
-    favorites_people.users_id= user_id
 
     #Agrega el personaje favorito agregado por el usuario.
     db.session.add(favorites_people)
@@ -246,7 +244,7 @@ def get_favorites_users(username):
 @api.route('/user/favorites', methods=['GET'])#Lista todos los favoritos que pertenecen al usuario actual.
 def user_favorites():
     user_id= 1 #Momentaneamente Hard-code, recoradar debe ser dinámico
-    favorites_characters= Favorite_People.query.filter_by(people_id= user_id)#Filtra por el campo people_id de la clase.
+    favorites_characters= Favorite_People.query.filter_by(characters_id= user_id)#Filtra por el campo people_id de la clase.
     favorites_planets= Favorite_Planet.query.filter_by(planets_id= user_id)#Filtra por el campo planets_id de la clase.
 
     results_characters= list(map(lambda people: people.to_dict(), favorites_characters))#Accede el array del campo favorites_characters.

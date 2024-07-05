@@ -13,7 +13,7 @@ const RegisterOrLogin = () => {
     const [isRegister, setIsRegister] = useState(true);
 
     const { store, actions } = useContext(Context)
-    if (!!store.user) return <Navigate to="/private" replace />
+    if (!!store.user) return <Navigate to="/" replace />
 
     return (
         <Container className="mt-5">

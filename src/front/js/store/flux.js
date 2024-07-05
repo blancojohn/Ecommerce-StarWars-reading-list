@@ -35,22 +35,43 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 
-			addFavorites: (index, entity) => {
+			addFavorites: (index, entity, id) => {
 				/* Necesito la propiedad del store favorites para luego hacer el spread operator
 				   cada vez que se agrega una entidad favorita */
 				const store = getStore()
-				const { favorites } = store
+				const { favorites, urlApi, user } = store
 
+				const url= `${urlApi}/favorite/people/${id}`
+				const body= {
+					users_id: user.id,
+					people_id: id
+				}
+				console.log(body)
+
+				const requestOptions = {
+					method: "POST",
+					body: JSON.stringify(body),
+					headers: {
+						"Content-Type": "application/json",
+					},
+				};
+				
 				let getEntity = store[entity]
 				let favorite = getEntity[index]
 				getEntity[index].liked = !getEntity[index].liked
-				setStore({
-					favorites: [...favorites, {
-						favorite,
-						entity
-					}],
-					[entity]: getEntity
-				})
+				getActions().getFetch(url, requestOptions)
+					.then(res => res.json())
+					.then(data => {
+
+						setStore({
+							favorites: [...favorites, {
+								data,
+								favorite,
+								entity
+							}],
+							[entity]: getEntity
+						})
+					})
 			},
 
 

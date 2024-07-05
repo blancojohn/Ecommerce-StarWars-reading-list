@@ -17,7 +17,7 @@ export const Profile = () => {
             {
                 store.accessToken &&
                 <>
-                    <h1 className="d-flex justify-content-center">¡{store?.user?.username} estás en una ruta privada con Riggo!</h1>
+                    <h1 className="d-flex justify-content-center">¡{store?.user?.username} Bienvenido. Ahora podrás guaradr tus entididades favoritas.</h1>
                     <div className="d-flex justify-content-center">
                     </div>
                 </>
