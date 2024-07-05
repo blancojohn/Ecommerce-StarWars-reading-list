@@ -15,7 +15,7 @@ export const Navbar = () => {
 						<>
 							<div className="ms-auto">
 								<Link to="/private">
-									<button className="btn btn-primary">Private Riggo!</button>
+									Mi perfil
 								</Link>
 							</div>
 							<div className="ms-2">
@@ -25,13 +25,8 @@ export const Navbar = () => {
 					) : (
 						<>
 							<div className="ms-auto">
-								<Link to="/signup">
-									<button className="btn btn-primary">Resgístrate</button>
-								</Link>
-							</div>
-							<div className="ms-2">
-								<Link to="/login">
-									<button className="btn btn-primary">Inicia Sesión</button>
+								<Link to="/registerorlogin">
+									<button className="btn btn-primary">Resgister/Login</button>
 								</Link>
 							</div>
 						</>

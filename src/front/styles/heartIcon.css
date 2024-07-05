@@ -1,0 +1,36 @@
+:root {
+    --default-color: #888;
+    --active-color: #f00;
+}
+
+* {
+    font-family: sans-serif;
+}
+
+.likeBtn {
+    border: none;
+    display: flex;
+    align-items: center;
+    border-radius: none;
+    cursor: pointer;
+    font-weight: bold;
+    height: 30px;
+    color: var(--default-color);
+    background-color: #fff;
+}
+
+.likeBtn:hover {
+    border-color: var(--active-color);
+    color: var(--active-color);
+}
+
+.liked,
+.liked:hover {
+    background-color: var(--active-color);
+    border-color: var(--active-color);
+    color: #fff;
+}
+
+.likeBtn-icon {
+    display: flex;
+}

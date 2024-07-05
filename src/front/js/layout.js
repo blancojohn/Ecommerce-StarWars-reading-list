@@ -7,10 +7,10 @@ import { Home } from "./pages/home";
 import DetailsPeople from './pages/detailsPeople';
 import DetailsPlanet from './pages/detailsPlanet';
 import RegisterOrLogin from "./pages/registerOrlogin";
-import { Me } from "./pages/private";
+import { Profile } from "./pages/private";
 import injectContext from "./store/appContext";
 
-import { Navbar } from "./component/navbar";
+import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/footer";
 
 //create your first component
@@ -28,10 +28,10 @@ const Layout = () => {
                     <Navbar />
                     <Routes>
                         <Route element={<Home />} path="/" />
+                        <Route element={<DetailsPeople />} path='/characters/:id' />
+                        <Route element={<DetailsPlanet />} path='/planets/:id' />
                         <Route element={<RegisterOrLogin />} path="/registerorlogin" />
-                        <Route element={<Me />} path="private" />
-                        <Route path='/characters/:id' element={<DetailsPeople />} />
-                        <Route path='/planets/:id' element={<DetailsPlanet />} />
+                        <Route element={<Profile />} path="private" /> 
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <ToastContainer />

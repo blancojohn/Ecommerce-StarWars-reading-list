@@ -21,7 +21,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			//Descripción de una entidad para las vistas DetailsPeople o DetailsPlanet
 			detailsPeople: {},
-			detailsPlanet: {}, 
+			detailsPlanet: {},
+
+			favorites: [],
 
 			/* Las siguientes propiedades guardan los datos de usuario luego de iniciar sesión
 			   porque después son untilizados en el sessionStorage */
@@ -33,58 +35,77 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 
+			addFavorites: (index, entity) => {
+				/* Necesito la propiedad del store favorites para luego hacer el spread operator
+				   cada vez que se agrega una entidad favorita */
+				const store = getStore()
+				const { favorites } = store
+
+				let getEntity = store[entity]
+				let favorite = getEntity[index]
+				getEntity[index].liked = !getEntity[index].liked
+				setStore({
+					favorites: [...favorites, {
+						favorite,
+						entity
+					}],
+					[entity]: getEntity
+				})
+			},
+
+
 			getDetailsPeople: (id) => {
-                const { urlApi } = getStore()
-                fetch(`${urlApi}/people/${id}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        setStore({ detailsPeople: data })
-                    })
-                    .catch(err => console.error(err))
-            },
+				const { urlApi } = getStore()
+				fetch(`${urlApi}/people/${id}`)
+					.then(res => res.json())
+					.then(data => {
+						setStore({ detailsPeople: data })
+					})
+					.catch(err => console.error(err))
+			},
 
 			getDetailsPlanet: (id) => {
-                const { urlApi } = getStore()
-                fetch(`${urlApi}/planet/${id}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        setStore({ detailsPlanet: data })
-                    })
-                    .catch(err => console.error(err))
-            },
+				const { urlApi } = getStore()
+				fetch(`${urlApi}/planet/${id}`)
+					.then(res => res.json())
+					.then(data => {
+						setStore({ detailsPlanet: data })
+					})
+					.catch(err => console.error(err))
+			},
 
 			getEntitys: () => {
-                const { urlApi } = getStore()
-                fetch(`${urlApi}/characters`)
-                    .then(res => res.json())
-                    .then(data => {
-                        let result = data.map((entity) => {
-                            return {
-                                ...entity,
-                                liked: false
-                            }
-                        })
-                        setStore({
+				const { urlApi } = getStore()
+				fetch(`${urlApi}/characters`)
+					.then(res => res.json())
+					.then(data => {
+						let result = data.map((entity) => {
+							return {
+								...entity,
+								liked: false
+							}
+						})
+						setStore({
 							characters: result
 						})
-                    })
-
-                    .catch(err => console.error(err))
-                fetch(`${urlApi}/planets`)
-                    .then(res => res.json())
-                    .then(data => {
-                        let result= data.map((entity) => {
-                            return {
-                                ...entity,
-                                liked: false
-                            }
-                        })
-                        setStore({ 
-							planets: result
 					})
-                    })
-                    .catch(err => console.error(err))
-            },
+
+					.catch(err => console.error(err))
+				fetch(`${urlApi}/planets`)
+					.then(res => res.json())
+					.then(data => {
+						let result = data.map((entity) => {
+							return {
+								...entity,
+								liked: false
+							}
+						})
+						setStore({
+							planets: result
+						})
+					})
+					.catch(err => console.error(err))
+			},
 
 			/* Mantiene abierta la sesión del usuario por los valores asignados
 			   a las propiedades del store de sessionStorage. Se ejecuta dentro appContext */
@@ -99,7 +120,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				const { urlApi, accessToken } = getStore()
 				const { getFetch } = getActions()
-				const url = `${urlApi}/api/private`
+				const url = `${urlApi}/private`
 				const solicitud = {
 					method: 'GET', /* Se debe especificar el  tipo de solicitud y agregar headers para poder pasar el token generado en el  login */
 					headers: {
@@ -127,7 +148,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const { getFetch } = getActions()
 
 				/* URL a acceder */
-				const url = `${urlApi}/api/login`
+				const url = `${urlApi}/login`
 				/* Transforma los datos en string */
 				const raw = JSON.stringify(loginUser)
 				/* Crea las opciones de la petición */
@@ -181,7 +202,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const { getFetch } = getActions()
 
 				/* URL a acceder */
-				const url = `${urlApi}/api/register`
+				const url = `${urlApi}/register`
 				/* Transforma los datos en string */
 				const raw = JSON.stringify(registerUser)
 				/* Crea las opciones de la petición */
@@ -227,6 +248,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({
 					user: null,
 					accessToken: null,
+					favorites: []
 				})
 
 				sessionStorage.removeItem('user')

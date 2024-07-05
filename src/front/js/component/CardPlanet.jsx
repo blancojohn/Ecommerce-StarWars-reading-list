@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { Context } from '../store/appContext'
 import { Link } from "react-router-dom";
-/* import HeartIcon from "./HeartIcon"; */ 
+import { toast } from "react-toastify";
+import HeartIcon from "./HeartIcon.jsx"; 
 
 
 const CardPlanet = () => {
@@ -23,9 +24,13 @@ const CardPlanet = () => {
                                         </div>
                                         <div className="card-body">
                                             <Link to={`/planets/${planet.id}`} type="button" className="btn btn-primary">Learn More</Link>
-                                            {/* <button onClick={() => actions.addFavorites(index, "planets")} className={`likeBtn ${planet.liked ? "liked" : ""}`}>
+                                            <button onClick={() => {
+                                                if (store.accessToken !== null)
+                                                    actions.addFavorites(index, "planets"); 
+                                                else{toast.info("Por favor inicia sesión para guardar tus favoritos.")}
+                                            }} className={`likeBtn ${planet.liked ? "liked" : ""}`}>
                                                 <HeartIcon />
-                                            </button> */} 
+                                            </button> 
                                         </div>
                                     </div>
                                 </div>
