@@ -58,8 +58,8 @@ def add_characters():
 
     return jsonify(people.to_dict()), 201
 
-@api.route('/favorite/people/<int:people_id>', methods=['POST']) #Agrega un personaje a un usuario del blog.
-def add_favorite_people(people_id):
+@api.route('/favorite/people/<int:people_id>/<int:user_id>', methods=['POST']) #Agrega un personaje a un usuario del blog.
+def add_favorite_people(people_id, user_id):
     datos= request.get_json()
     print(datos['people_id'])
     print(datos['users_id'])
@@ -67,6 +67,7 @@ def add_favorite_people(people_id):
     #A continuación preparación del Insert
     favorites_people= Favorite_People()  
     favorites_people.characters_id= people_id
+    favorites_people.users_id= user_id
 
     #Agrega el personaje favorito agregado por el usuario.
     db.session.add(favorites_people)
@@ -235,24 +236,36 @@ def get_users():
     users= list(map(lambda user: user.to_dict(), users)) #Lista todo los usuarios.
     return jsonify(users), 200
 
-@api.route('/users/<username>/favorites', methods=['GET'])
-def get_favorites_users(username):
-    user= User.query.filter_by(username= username).first()
-    result= user.to_dict()
-    return jsonify(result), 200
+@api.route('/<int:user_id>/favorites', methods=['GET'])#Lista todos los favoritos que pertenecen al usuario actual.
+def get_user_favorites(user_id):
+    user= User.query.get(user_id)
+    characters= []
+    planets= []
 
-@api.route('/user/favorites', methods=['GET'])#Lista todos los favoritos que pertenecen al usuario actual.
-def user_favorites():
-    user_id= 1 #Momentaneamente Hard-code, recoradar debe ser dinámico
-    favorites_characters= Favorite_People.query.filter_by(characters_id= user_id)#Filtra por el campo people_id de la clase.
-    favorites_planets= Favorite_Planet.query.filter_by(planets_id= user_id)#Filtra por el campo planets_id de la clase.
+    for people in user.favorites_characters:
+        characters.append(people.to_dict())
 
-    results_characters= list(map(lambda people: people.to_dict(), favorites_characters))#Accede el array del campo favorites_characters.
-    results_planets= list(map(lambda planet: planet.to_dict(), favorites_planets))#Accede el array del campo favorites_planets.
+    for planet in user.favorites_planets:
+        planets.append(planet.to_dict())
 
-    datos= {
-        "favorites_characters": results_characters,
-        "favorites_planets": results_planets
+    entitys= {
+        "favorites_characters": characters,
+        "favorites_planets": planets
     }
+    
+    return jsonify(entitys)
+    #favorites_characters= Favorite_People.query.filter_by(characters_id= user_id)#Filtra por el campo people_id de la clase.
+    #favorites_planets= Favorite_Planet.query.filter_by(planets_id= user_id)#Filtra por el campo planets_id de la clase.
 
-    return jsonify(datos), 200
+    #results_characters= list(map(lambda people: people.to_dict(), favorites_characters))#Accede el array del campo favorites_characters.
+    #results_planets= list(map(lambda planet: planet.to_dict(), favorites_planets))#Accede el array del campo favorites_planets.
+
+    #datos= {
+        #"favorites_characters": results_characters,
+        #"favorites_planets": results_planets
+    #}
+
+    #return jsonify(datos), 200
+
+    #return jsonify([favorite.to_dict() for favorite in user.favorites_characters], [favorite.to_dict() for favorite in user.favorites_planets])
+    

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Context } from '../store/appContext';
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import HeartIcon from "./HeartIcon.jsx";
 
@@ -26,7 +26,7 @@ const CardPeople = () => {
                                             <Link to={`/characters/${people.id}`} type="button" className="btn btn-primary">Learn More</Link>
                                             <button onClick={() => {
                                                 if (store.accessToken !== null )
-                                                    actions.addFavorites(index, "characters", people.id)
+                                                    actions.addFavorites(index, "characters", people.id, store.user.id)
                                                 else{toast.info("Por favor inicia sesión para guarda tus favoritos")}
                                             }} className={`likeBtn ${people.liked ? "liked" : ""}`}>
                                                 <HeartIcon />

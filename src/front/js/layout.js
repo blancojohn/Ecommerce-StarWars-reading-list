@@ -12,7 +12,7 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/footer";
-import CardPeople from "./component/CardPeople.jsx";
+/* import CardPeople from "./component/CardPeople.jsx"; */
 
 //create your first component
 const Layout = () => {
