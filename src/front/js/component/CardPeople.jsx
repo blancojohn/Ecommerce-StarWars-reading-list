@@ -26,7 +26,7 @@ const CardPeople = () => {
                                             <Link to={`/characters/${people.id}`} type="button" className="btn btn-primary">Learn More</Link>
                                             <button onClick={() => {
                                                 if (store.accessToken !== null )
-                                                    actions.addFavorites(index, "characters", people.id, store.user.id)
+                                                    actions.addFavorites(index, "people", people.id)
                                                 else{toast.info("Por favor inicia sesión para guarda tus favoritos")}
                                             }} className={`likeBtn ${people.liked ? "liked" : ""}`}>
                                                 <HeartIcon />

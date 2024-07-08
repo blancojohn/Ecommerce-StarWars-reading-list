@@ -1,6 +1,20 @@
 from flask_sqlalchemy import SQLAlchemy
 
+
 db = SQLAlchemy()
+
+class Favorite(db.Model):
+    __tablename__= 'favorites'
+    user_id= db.Column(db.Integer, db.ForeignKey('users.id'), primary_key= True)
+    favorite_id= db.Column(db.Integer, primary_key= True)
+    favorite_type= db.Column(db.String(), primary_key= True)
+
+    def to_dict(self):
+        return{
+            "user_id": self.user_id,
+            "favorite_id": self.favorite_id,
+            "favorite_type": self.favorite_type
+        }
 
 class People(db.Model): #Contiene los personajes de StarWars.
     __tablename__= 'characters'
@@ -66,6 +80,7 @@ class User(db.Model): #Contiene los usuarios agragdos al block
     password = db.Column(db.String(255), unique=False, nullable=False)
     favorites_characters= db.relationship('Favorite_People', backref= 'user')#Devuelve una lista de los personajes agregados.
     favorites_planets= db.relationship('Favorite_Planet', backref= 'user')#Devuelve una lista de los planetas agregados.
+    favorites= db.relationship('Favorite')
     #A FUTURO SE AGREGARÁ EMAIL Y PASSWORD PARA IMPLEMENTAR JWT.
 
     def to_dict(self):

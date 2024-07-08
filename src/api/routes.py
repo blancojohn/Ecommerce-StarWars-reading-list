@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import datetime
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, Favorite_Planet, Favorite_People, People, Planet, User
+from api.models import db, Favorite_Planet, Favorite_People, People, Planet, User, Favorite
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -58,22 +58,20 @@ def add_characters():
 
     return jsonify(people.to_dict()), 201
 
-@api.route('/favorite/people/<int:people_id>/<int:user_id>', methods=['POST']) #Agrega un personaje a un usuario del blog.
-def add_favorite_people(people_id, user_id):
-    datos= request.get_json()
-    print(datos['people_id'])
-    print(datos['users_id'])
+@api.route('/favorite/<entity>/<int:favorite_id>/<int:user_id>', methods=['POST']) #Agrega un personaje a un usuario del blog.
+def add_favorite_people(entity, favorite_id, user_id):
 
     #A continuación preparación del Insert
-    favorites_people= Favorite_People()  
-    favorites_people.characters_id= people_id
-    favorites_people.users_id= user_id
+    favorites= Favorite()  
+    favorites.favorite_id= favorite_id
+    favorites.user_id= user_id
+    favorites.favorite_type= entity
 
     #Agrega el personaje favorito agregado por el usuario.
-    db.session.add(favorites_people)
+    db.session.add(favorites)
     #Guarda el personaje favorito por los ids asociados.
     db.session.commit()
-    return jsonify(favorites_people.to_dict()), 200
+    return jsonify(favorites.to_dict()), 200
 
 @api.route('/favorite/people/<int:people_id>', methods= ['DELETE']) #Elimina un personaje de la tabla favorites_characters del usuario.
 def delete_favorite_people(people_id):
@@ -253,7 +251,7 @@ def get_user_favorites(user_id):
         "favorites_planets": planets
     }
     
-    return jsonify(entitys)
+    return jsonify(entitys), 200
     #favorites_characters= Favorite_People.query.filter_by(characters_id= user_id)#Filtra por el campo people_id de la clase.
     #favorites_planets= Favorite_Planet.query.filter_by(planets_id= user_id)#Filtra por el campo planets_id de la clase.
 
