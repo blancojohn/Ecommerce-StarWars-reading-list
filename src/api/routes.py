@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import datetime
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, Favorite_Planet, Favorite_People, People, Planet, User, Favorite
+from api.models import db, Favorite_Planet, Favorite_People, People, Planet, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -58,20 +58,37 @@ def add_characters():
 
     return jsonify(people.to_dict()), 201
 
+""" 
+Endpoint condicionada para utilizar solo cuando un usuario inicia sesión.
+También condicionado según el tipo de entidad para guardar la info en las tabla de esa entidad.
+El tipo de entidad se captura desde los componentes al hacer click en el botón me gusta.
+Igualmente se capturan la entidad por el id y el usuario id.
+"""
 @api.route('/favorite/<entity>/<int:favorite_id>/<int:user_id>', methods=['POST']) #Agrega un personaje a un usuario del blog.
 def add_favorite_people(entity, favorite_id, user_id):
 
     #A continuación preparación del Insert
-    favorites= Favorite()  
-    favorites.favorite_id= favorite_id
-    favorites.user_id= user_id
-    favorites.favorite_type= entity
+    if entity == "people":
+        favorites_characters= Favorite_People()  
+        favorites_characters.characters_id= favorite_id
+        favorites_characters.users_id= user_id
 
-    #Agrega el personaje favorito agregado por el usuario.
-    db.session.add(favorites)
-    #Guarda el personaje favorito por los ids asociados.
-    db.session.commit()
-    return jsonify(favorites.to_dict()), 200
+        #Agrega el personaje favorito agregado por el usuario.
+        db.session.add(favorites_characters)
+        #Guarda el personaje favorito por los ids asociados.
+        db.session.commit()
+        return jsonify(favorites_characters.to_dict()), 200
+
+    if entity == "planet":
+        favorites_planets= Favorite_Planet()  
+        favorites_planets.planets_id= favorite_id
+        favorites_planets.users_id= user_id
+
+        #Agrega el planeta favorito agregado por el usuario.
+        db.session.add(favorites_planets)
+        #Guarda el planeta favorito por los ids asociados.
+        db.session.commit()
+        return jsonify(favorites_planets.to_dict()), 200
 
 @api.route('/favorite/people/<int:people_id>', methods= ['DELETE']) #Elimina un personaje de la tabla favorites_characters del usuario.
 def delete_favorite_people(people_id):
@@ -119,25 +136,7 @@ def add_planets():
     db.session.commit()
 
     return jsonify(planet.to_dict()), 201
-
-@api.route('/favorite/planet/<int:planet_id>', methods=['POST']) #Agrega un planeta a un usaurio del blog.
-def add_favorite_planet(planet_id):
-    datos= request.get_json()
-    print(datos['planets_id'])
-    print(datos['users_id'])
-
-    #A contnuación preparación del insert.
-    user_id= 1
-    favorites_planets= Favorite_Planet()  
-    favorites_planets.planets_id= planet_id
-    favorites_planets.users_id= user_id
-
-    #Ejecuta el query y guarda el planeta en el usuario actual.
-    db.session.add(favorites_planets) 
-    db.session.commit()
-    return jsonify(favorites_planets.to_dict()), 200
-                                                             
-                                                             
+                
 @api.route('/favorite/planet/<int:planet_id>', methods= ['DELETE']) #Elimina un planeta favorito de la tabla favorites_planets del usuario.
 def delete_favorite_planet(planet_id):                              
     user_id= 1
@@ -237,33 +236,15 @@ def get_users():
 @api.route('/<int:user_id>/favorites', methods=['GET'])#Lista todos los favoritos que pertenecen al usuario actual.
 def get_user_favorites(user_id):
     user= User.query.get(user_id)
-    characters= []
-    planets= []
+    favorites= []
 
     for people in user.favorites_characters:
-        characters.append(people.to_dict())
+        favorites.append(people.to_dict())
 
     for planet in user.favorites_planets:
-        planets.append(planet.to_dict())
+        favorites.append(planet.to_dict())
 
-    entitys= {
-        "favorites_characters": characters,
-        "favorites_planets": planets
-    }
-    
+    entitys= favorites    
     return jsonify(entitys), 200
-    #favorites_characters= Favorite_People.query.filter_by(characters_id= user_id)#Filtra por el campo people_id de la clase.
-    #favorites_planets= Favorite_Planet.query.filter_by(planets_id= user_id)#Filtra por el campo planets_id de la clase.
-
-    #results_characters= list(map(lambda people: people.to_dict(), favorites_characters))#Accede el array del campo favorites_characters.
-    #results_planets= list(map(lambda planet: planet.to_dict(), favorites_planets))#Accede el array del campo favorites_planets.
-
-    #datos= {
-        #"favorites_characters": results_characters,
-        #"favorites_planets": results_planets
-    #}
-
-    #return jsonify(datos), 200
-
-    #return jsonify([favorite.to_dict() for favorite in user.favorites_characters], [favorite.to_dict() for favorite in user.favorites_planets])
     
+
