@@ -90,16 +90,20 @@ def add_favorite_people(entity, favorite_id, user_id):
         db.session.commit()
         return jsonify(favorites_planets.to_dict()), 200
 
-@api.route('/favorite/people/<int:people_id>', methods= ['DELETE']) #Elimina un personaje de la tabla favorites_characters del usuario.
-def delete_favorite_people(people_id):
-    user_id= 1                              
-    favorite_people= Favorite_People.query.filter_by(people_id= people_id, users_id= user_id).first()
+@api.route('/favorite/<entity>/<int:favorite_id>/<int:user_id>', methods= ['DELETE']) #Elimina un personaje de la tabla favorites_characters del usuario.
+def delete_favorite_people(entity, favorite_id, user_id):
+    #entitys_favorites= Favorite_People()
+    #entitys_favorites.characters_id= entitys_id
+    if entity == "people":
+        entitys_favorites_characters= Favorite_People.query.filter_by(characters_id= favorite_id, users_id= user_id).first()
+        db.session.delete(entitys_favorites_characters)
+        db.session.commit()
+
+    if entity == "planet":
+        entitys_favorites_planets= Favorite_Planet.query.filter_by(planets_id= favorite_id, users_id= user_id).first()
+        db.session.delete(entitys_favorites_planets)
+        db.session.commit()
     
-    if not favorite_people:
-        return jsonify({"messagge": "Favorite people doesn't exist!"}), 404
-    
-    db.session.delete(favorite_people)
-    db.session.commit()
 
     return jsonify({"messagge": "Favorite People was deleted!"}), 200
 

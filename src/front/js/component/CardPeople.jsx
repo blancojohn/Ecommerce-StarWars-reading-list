@@ -14,7 +14,7 @@ const CardPeople = () => {
                 <div className="row">
                     <h1>Characters</h1>
                     {
-                        store.characters.map((people, index) => {
+                        store.characters.map((people) => {
                             return (
                                 <div key={people.id} className="col-md-3">
                                     <div className="card">
@@ -26,7 +26,7 @@ const CardPeople = () => {
                                             <Link to={`/characters/${people.id}`} type="button" className="btn btn-primary">Learn More</Link>
                                             <button onClick={() => {
                                                 if (store.accessToken !== null )
-                                                    actions.addFavorites(index, "people", people.id)
+                                                    actions.addFavorites("people", people.id)
                                                 else{toast.info("Por favor inicia sesión para guarda tus favoritos")}
                                             }} className={`likeBtn ${people.liked ? "liked" : ""}`}>
                                                 <HeartIcon />

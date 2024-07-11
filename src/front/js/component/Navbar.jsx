@@ -26,13 +26,20 @@ export const Navbar = () => {
 								<ul className="dropdown-menu">
 									{
 										store.favorites.length > 0 ?
-											store.favorites.map((entity/* , index */) => {
+											store.favorites.map((entity) => {
 												return (
-													<li key={entity.characters_id} className="d-flex">
-														{/* <Link to={`/${entity.entity}/${entity.favorite.uid}`} className="dropdown-item" href="#"> */}
-														{entity.name}
-														{/* </Link> */}
-														<button onClick={() => actions.deleteFavorites(index)}>
+													<li key={entity.name} className="d-flex">
+														<Link to={`/characters/${entity.characters_id}`} className="dropdown-item" href="#">
+															{entity.name}
+														</Link>
+														<button onClick={() => {
+															if (entity.characters_id) {
+																actions.deleteFavorites("people", entity.characters_id, entity.users_id)
+															}
+															if (entity.planets_id) {
+																actions.deleteFavorites("planet", entity.planets_id, entity.users_id)
+															}
+														}}>
 															<GiTrashCan />
 														</button>
 													</li>

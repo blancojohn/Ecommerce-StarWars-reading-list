@@ -14,7 +14,7 @@ const CardPlanet = () => {
                 <div className="row">
                     <h1>Planets</h1>
                     {
-                        store.planets.map((planet, index) => {
+                        store.planets.map((planet) => {
                             return (
                                 <div key={planet.id} className="col-md-3">
                                     <div className="card">
@@ -26,7 +26,7 @@ const CardPlanet = () => {
                                             <Link to={`/planets/${planet.id}`} type="button" className="btn btn-primary">Learn More</Link>
                                             <button onClick={() => {
                                                 if (store.accessToken !== null)
-                                                    actions.addFavorites(index, "planet", planet.id); 
+                                                    actions.addFavorites("planet", planet.id); 
                                                 else{toast.info("Por favor inicia sesión para guardar tus favoritos.")}
                                             }} className={`likeBtn ${planet.liked ? "liked" : ""}`}>
                                                 <HeartIcon />
