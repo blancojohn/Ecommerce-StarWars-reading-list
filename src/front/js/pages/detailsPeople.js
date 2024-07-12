@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 const DetailsPeople = () => {
     const { store, actions } = useContext(Context)
-    const { name, description } = store.detailsPeople
+    const { name, description, id } = store.detailsPeople
     const params = useParams()
 
     useEffect(() => {
@@ -17,7 +17,15 @@ const DetailsPeople = () => {
             <div className="container card mb-3">
                 <div className="row g-0">
                     <div className="col-md-4">
-                        <img src="https://picsum.photos/id/129/200/200" className="img-fluid rounded-start" alt="..."></img>
+                        <img
+                            src={
+                                "https://starwars-visualguide.com/assets/img/characters/" +
+                                id +
+                                ".jpg"
+                            }
+                            className="card-img-top"
+                            alt="..."
+                        ></img>
                     </div>
                     <div className="col-md-8">
                         <div className="card-body">

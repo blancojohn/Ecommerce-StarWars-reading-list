@@ -18,19 +18,27 @@ const CardPeople = () => {
                             return (
                                 <div key={people.id} className="col-md-3">
                                     <div className="card">
-                                        <img src="..." className="card-img-top" alt="..."></img>
+                                        <img
+                                            src={
+                                                "https://starwars-visualguide.com/assets/img/characters/" +
+                                                people.id +
+                                                ".jpg"
+                                            }
+                                            className="card-img-top"
+                                            alt="..."
+                                        ></img>
                                         <div className="card-body">
                                             <h6 className="card-title">{people.name}</h6>
                                         </div>
                                         <div className="card-body">
                                             <Link to={`/characters/${people.id}`} type="button" className="btn btn-primary">Learn More</Link>
                                             <button onClick={() => {
-                                                if (store.accessToken !== null )
+                                                if (store.accessToken !== null)
                                                     actions.addFavorites("people", people.id)
-                                                else{toast.info("Por favor inicia sesión para guarda tus favoritos")}
+                                                else { toast.info("Por favor inicia sesión para guarda tus favoritos") }
                                             }} className={`likeBtn ${people.liked ? "liked" : ""}`}>
                                                 <HeartIcon />
-                                            </button>  
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

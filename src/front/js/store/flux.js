@@ -36,13 +36,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 		actions: {
 
 			getFavorites: (user_id) => {
-				const { urlApi, } = getStore()
+				const { urlApi, favorites } = getStore()
+				
 				fetch(`${urlApi}/${user_id}/favorites`)
 					.then(res => res.json())
 					.then(data => {
 						setStore({
 							favorites: data
 						})
+						console.log(data)
 					})
 			},
 

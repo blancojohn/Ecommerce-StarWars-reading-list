@@ -9,7 +9,8 @@ export const Navbar = () => {
 	const navigate = useNavigate()
 
 	return (
-		<nav className="navbar navbar-light bg-light">
+		<nav className="navbar navbar-light bg-dark">
+				<Link to={'/'} className="navbar-brand ms-3" href="#">StarWars</Link>
 			<div className="container">
 				{
 					(store.accessToken) ? (
@@ -29,9 +30,12 @@ export const Navbar = () => {
 											store.favorites.map((entity) => {
 												return (
 													<li key={entity.name} className="d-flex">
-														<Link to={`/characters/${entity.characters_id}`} className="dropdown-item" href="#">
-															{entity.name}
-														</Link>
+														{
+															entity.characters_id ? 
+																<Link to={`/characters/${entity.characters_id}`} className="dropdown-item">{entity.name}</Link>
+																:
+																<Link to={`/planets/${entity.planets_id}`} className="dropdown-item">{entity.name}</Link>
+														}
 														<button onClick={() => {
 															if (entity.characters_id) {
 																actions.deleteFavorites("people", entity.characters_id, entity.users_id)
@@ -39,7 +43,7 @@ export const Navbar = () => {
 															if (entity.planets_id) {
 																actions.deleteFavorites("planet", entity.planets_id, entity.users_id)
 															}
-														}}>
+														}} type="button" className="btn btn-light ms-auto">
 															<GiTrashCan />
 														</button>
 													</li>
@@ -67,3 +71,4 @@ export const Navbar = () => {
 		</nav>
 	);
 };
+

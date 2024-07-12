@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Context } from '../store/appContext'
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import HeartIcon from "./HeartIcon.jsx"; 
+import HeartIcon from "./HeartIcon.jsx";
 
 
 const CardPlanet = () => {
@@ -18,7 +18,15 @@ const CardPlanet = () => {
                             return (
                                 <div key={planet.id} className="col-md-3">
                                     <div className="card">
-                                        <img src="..." className="card-img-top" alt="..."></img>
+                                        <img
+                                            src={
+                                                "https://starwars-visualguide.com/assets/img/planets/" +
+                                                planet.id +
+                                                ".jpg"
+                                            }
+                                            className="card-img-top"
+                                            alt="..."
+                                        ></img>
                                         <div className="card-body">
                                             <h6 className="card-title">{planet.name}</h6>
                                         </div>
@@ -26,11 +34,11 @@ const CardPlanet = () => {
                                             <Link to={`/planets/${planet.id}`} type="button" className="btn btn-primary">Learn More</Link>
                                             <button onClick={() => {
                                                 if (store.accessToken !== null)
-                                                    actions.addFavorites("planet", planet.id); 
-                                                else{toast.info("Por favor inicia sesión para guardar tus favoritos.")}
+                                                    actions.addFavorites("planet", planet.id);
+                                                else { toast.info("Por favor inicia sesión para guardar tus favoritos.") }
                                             }} className={`likeBtn ${planet.liked ? "liked" : ""}`}>
                                                 <HeartIcon />
-                                            </button> 
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
