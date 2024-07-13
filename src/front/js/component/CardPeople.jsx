@@ -12,26 +12,23 @@ const CardPeople = () => {
         <>
             <div className="container">
                 <div className="row">
-                    <h1>Characters</h1>
+                    <h1 className="text-light">Characters</h1>
                     {
                         store.characters.map((people) => {
                             return (
-                                <div key={people.id} className="col-md-3">
-                                    <div className="card">
+                                <div key={people.id} className="col-md-2">
+                                    <div className="card bg-dark">
                                         <img
                                             src={
                                                 "https://starwars-visualguide.com/assets/img/characters/" +
                                                 people.id +
                                                 ".jpg"
                                             }
-                                            className="card-img-top"
+                                            width="100%"
                                             alt="..."
                                         ></img>
                                         <div className="card-body">
-                                            <h6 className="card-title">{people.name}</h6>
-                                        </div>
-                                        <div className="card-body">
-                                            <Link to={`/characters/${people.id}`} type="button" className="btn btn-primary">Learn More</Link>
+                                            <Link to={`/characters/${people.id}`} className="text-light">{people.name}</Link>
                                             <button onClick={() => {
                                                 if (store.accessToken !== null)
                                                     actions.addFavorites("people", people.id)

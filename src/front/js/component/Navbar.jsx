@@ -10,7 +10,7 @@ export const Navbar = () => {
 
 	return (
 		<nav className="navbar navbar-light bg-dark">
-				<Link to={'/'} className="navbar-brand ms-3" href="#">StarWars</Link>
+				<Link to={'/'} className="navbar-brand ms-3 text-light" href="#">StarWars</Link>
 			<div className="container">
 				{
 					(store.accessToken) ? (

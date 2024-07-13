@@ -8,21 +8,22 @@ export const Profile = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (store?.accessToken !== null) {actions.routePrivateUser()
-        }else{navigate('/')}
+        if (store?.accessToken !== null) {
+            actions.routePrivateUser()
+        } else { navigate('/') }
     }, [])
 
     return (
         <>
             {
-                store.accessToken &&
-                <>
-                    <h1 className="d-flex justify-content-center">¡{store?.user?.username} Bienvenido. Ahora podrás guaradr tus entididades favoritas.</h1>
-                    <div className="d-flex justify-content-center">
-                    </div>
-                </>
+                store.favorites.length > 0 ?
+                    store.favorites.map((favorite) => {
+                        <div key={favorite.name}>{favorite.name}</div>
+                    }) : (<h1>sin favoritos</h1>)
             }
         </>
     );
 };
+
+
 

@@ -17,7 +17,7 @@ export const Home = () => {
 				(store.accessToken) &&
 					<>
 						<div className="ms-5 mt-2">
-							<h3>Bienvenido al Universo de Star Wars {store.user.username}</h3>
+							<h3 className="text-light">Bienvenido al Universo de Star Wars {store.user.username}</h3>
 						</div>
 					</>
 

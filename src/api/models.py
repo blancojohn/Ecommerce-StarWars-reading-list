@@ -7,7 +7,6 @@ class People(db.Model): #Contiene los personajes de StarWars.
     __tablename__= 'characters'
     id= db.Column(db.Integer, primary_key= True)
     name= db.Column(db.String(30), nullable= False)
-    img_url= db.Column(db.String(300), default= "")
     description= db.Column(db.String(999), nullable= False)
     favorites_users= db.relationship('Favorite_People', backref='people')#El backref permite saber cuale planetas fueron seleccionados como favoritos por un usuario.
 
@@ -40,7 +39,6 @@ class Planet(db.Model): #Contiene los planetas de StarWars.
     __tablename__= 'planets'
     id= db.Column(db.Integer, primary_key=True)
     name= db.Column(db.String(200), nullable= False)
-    img_url= db.Column(db.String(300), default= "")
     description= db.Column(db.String(999), nullable= False)
     favorites_users= db.relationship('Favorite_Planet', backref= 'planet')#El backref permite sabertas fueron seleccionados como favoritos por un usuario.
                                                                                          
